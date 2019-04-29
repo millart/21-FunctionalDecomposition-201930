@@ -12,6 +12,7 @@ import random
 
 
 def main():
+    print('Welcome to the game of hangman! To start things off:')
     word = pick_word()
     allowed = pick_guesses()
     repeat(word, allowed)
@@ -23,8 +24,11 @@ def pick_word():
         f.readline()
         string = f.read()
         words = string.split()
-        r = random.randrange(0, len(words))
-        return words[r]
+        minimum_length = int(input('What minimum length do you want for the secret word?'))
+        while True:
+            r = random.randrange(0, len(words))
+            if len(words[r]) >= minimum_length:
+                return words[r]
 
 
 def pick_guesses():
@@ -59,20 +63,23 @@ def new_result(total_guess, new_guess, letter):
 
 
 def print_result(good_guess, letter, word, total_guess, allowed):
+    string = ''
+    for k in range(len(total_guess)):
+        string = string + str(total_guess[k])
     if good_guess == 1:
-        string = ''
-        for k in range(len(total_guess)):
-            string = string + str(total_guess[k])
         if string == word:
             print('You won! The secret word is:', word)
         else:
             print('Good guess!')
             print('Here is what you currently know about the secret word:')
             print(string)
+            return allowed
     else:
         allowed = allowed - 1
-        print('Sorry! There are no ', letter, ' letters in the secret word. You still have', allowed,
+        print('Sorry! There are no', letter, 'letters in the secret word. You still have', allowed,
               'unsuccessful guesses left before you lose the game!')
+        print('Here is what you currently know about the secret word:')
+        print(string)
         if allowed == 0:
             print('You lose! The secret word was:', word)
         return allowed
